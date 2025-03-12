@@ -4,27 +4,24 @@ import java.util.Scanner;
 
 public class UI {
 
-public UI() {
-
-
-}
+public UI() {}
 
 public void displayMenu() {
-	Scanner scanner = new Scanner(System.in);
+	try (Scanner scanner = new Scanner(System.in)){;
 	int choice = 0;
 
 	while (choice != 8) {
-	System.out.println("1. Create a task");
-	System.out.println("2. Update a task");
-	System.out.println("3. Delete a task");
-	System.out.println("4. Display all tasks");
-	System.out.println("5. Display all tasks that are not completed");
-	System.out.println("6. Delete all tasks");
-	System.out.println("7. Mark a task as completed");
-	System.out.println("8. Exit");
+		System.out.println("1. Create a task");
+		System.out.println("2. Update a task");
+		System.out.println("3. Delete a task");
+		System.out.println("4. Display all tasks");
+		System.out.println("5. Display all tasks that are not completed");
+		System.out.println("6. Delete all tasks");
+		System.out.println("7. Mark a task as completed");
+		System.out.println("8. Exit");
 		System.out.print("> ");
-	choice = scanner.nextInt();
-	scanner.nextLine();
+		choice = scanner.nextInt();
+		scanner.nextLine();
 
 		switch (choice) {
 			case 1:
@@ -68,5 +65,8 @@ public void displayMenu() {
 				TaskRepository.markCompleted(taskName);
 				break;
 		}
+	}
+} catch (Exception e) {
+		System.out.println("Entry must be a number");
 	}
 }}
