@@ -1,6 +1,8 @@
 package org.example;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -9,6 +11,7 @@ import java.util.List;
 
 public class TaskRepository {
 
+private static final Logger log = LoggerFactory.getLogger(TaskRepository.class);
 public TaskRepository() {
 }
 
@@ -28,62 +31,45 @@ public static void create(Task task) {
 		ps.setBoolean(2, task.isCompleted());
 		ps.execute();
 	} catch (Exception e) {
-		System.out.println(e);
+		log.error("e: ", e);
 	}
 }
 
-public static void updateName(Task task) {
+public static void updateName(String newTask, String oldTask) {
 	try (Connection connection = getDataSource().getConnection()) {
-		var updateCommand = "update TASK set name = ?, completed = ? where id = ?";
+		var updateCommand = "update TASK set name = ? where name = ?";
 		var ps = connection.prepareStatement(updateCommand);
-		ps.setString(1, task.getName());
-		ps.setBoolean(2, task.isCompleted());
-		ps.setInt(3, task.getId());
+		ps.setString(1, newTask);
+		ps.setString(2, oldTask);
+		ps.execute();
+
+	} catch (Exception e) {
+		log.error("e: ", e);
+	}
+}
+
+public static void markCompleted(String task) {
+	try (Connection connection = getDataSource().getConnection()) {
+		var updateCommand = "update TASK set completed = true where name = ?";
+		var ps = connection.prepareStatement(updateCommand);
+		ps.setString(1, task);
 
 		ps.execute();
 
 	} catch (Exception e) {
-		System.out.println(e);
+		log.error("e: ", e);
 	}
 }
 
-public static void delete(Task task) {
+public static void delete(String task) {
 	try (Connection connection = getDataSource().getConnection()) {
-			var statement = connection.createStatement();
-			var deleteQuery = "delete from Task where name = ?";
-			statement.execute(deleteQuery);
-
+		var deleteQuery = "delete from Task where name = ?";
+		var ps = connection.prepareStatement(deleteQuery);
+		ps.setString(1, task);
+		ps.execute();
 	} catch (Exception e) {
-		System.out.println(e);
+		log.error("e: ", e);
 	}
-}
-
-public static void findById(Task task) {
-	try (Connection connection = getDataSource().getConnection()) {
-		var selectQuery = "Select * from Task where name = ?";
-		var ps = connection.prepareStatement(selectQuery);
-		ps.setString(1, task.getName());
-		System.out.println(task.getId() + " " + task.getName() + " " + task.isCompleted());
-	} catch (Exception e) {
-		System.out.println(e);
-	}
-}
-
-public static List<Task> findAll() {
-	try (Connection connection = getDataSource().getConnection()) {
-		var selectAllQuery = "Select * from TASK";
-		var statement = connection.createStatement();
-		var resultSet = statement.executeQuery(selectAllQuery);
-		var tasks = new ArrayList<Task>();
-		while (resultSet.next()) {
-			var task = new Task(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("completed"));
-			tasks.add(task);
-		}
-		return tasks;
-	} catch (Exception e) {
-		System.out.println(e);
-	}
-	return null;
 }
 
 public static void DeleteAll() {
@@ -92,23 +78,26 @@ public static void DeleteAll() {
 		var deleteQuery = "delete from Task";
 		statement.execute(deleteQuery);
 	} catch (Exception e) {
-		System.out.println(e);
+		log.error("e: ", e);
 	}
 }
 
-public static void displayNotCompleted() {
-	System.out.println("The following are not completed:");
+public static List<Task> findQuery(String query) {
 	try (Connection connection = getDataSource().getConnection()) {
-		var selectAllQuery = "Select * from TASK where completed = false";
 		var statement = connection.createStatement();
-		var resultSet = statement.executeQuery(selectAllQuery);
+		var resultSet = statement.executeQuery(query);
 		var tasks = new ArrayList<Task>();
-		while (resultSet.next()) {
+		while (resultSet.next())
+		{
 			var task = new Task(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("completed"));
 			tasks.add(task);
 		}
-	} catch (Exception e) {
-		System.out.println(e);
+		return tasks;
+		} catch (Exception e) {
+			log.error("e: ", e);
+		}
+		return null;
 	}
 }
-}
+
+

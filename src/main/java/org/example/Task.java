@@ -1,9 +1,10 @@
 package org.example;
 
 public class Task {
-private int id;
+private final int id;
 private String name;
 private boolean completed;
+private String Priority;
 
 public Task(int id, String name, boolean completed) {
 	this.id = id;
@@ -15,8 +16,11 @@ public int getId() {
 	return id;
 }
 
-public void setId(int id) {
-	this.id = id;
+public String getPriority() {
+	return Priority;
+}
+public void setPriority(String priority) {
+	Priority = priority;
 }
 
 public String getName() {
