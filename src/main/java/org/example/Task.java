@@ -6,10 +6,11 @@ private String name;
 private boolean completed;
 private String Priority;
 
-public Task(int id, String name, boolean completed) {
+public Task(int id, String name, boolean completed, String Priority) {
 	this.id = id;
 	this.name = name;
-	this.completed = false;
+	this.completed = completed;
+	this.Priority = Priority;
 }
 
 public int getId() {

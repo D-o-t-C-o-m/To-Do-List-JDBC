@@ -12,7 +12,9 @@ import java.util.List;
 public class TaskRepository {
 
 private static final Logger log = LoggerFactory.getLogger(TaskRepository.class);
+
 public TaskRepository() {
+
 }
 
 private static DataSource getDataSource() {
@@ -25,10 +27,11 @@ private static DataSource getDataSource() {
 
 public static void create(Task task) {
 	try (Connection connection = getDataSource().getConnection()) {
-		String insertStatement = "insert into TASK (name, completed) values (?, ?)";
+		String insertStatement = "insert into TASK (name, completed, PRIORITY) values (?, ?, ?)";
 		var ps = connection.prepareStatement(insertStatement);
 		ps.setString(1, task.getName());
 		ps.setBoolean(2, task.isCompleted());
+		ps.setString(3, task.getPriority());
 		ps.execute();
 	} catch (Exception e) {
 		log.error("e: ", e);
@@ -89,7 +92,7 @@ public static List<Task> findQuery(String query) {
 		var tasks = new ArrayList<Task>();
 		while (resultSet.next())
 		{
-			var task = new Task(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("completed"));
+			var task = new Task(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("completed"), resultSet.getString("priority"));
 			tasks.add(task);
 		}
 		return tasks;
@@ -99,5 +102,6 @@ public static List<Task> findQuery(String query) {
 		return null;
 	}
 }
+
 
 

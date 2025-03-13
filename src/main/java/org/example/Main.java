@@ -8,7 +8,7 @@ System.out.println("\nYet another To-Do List");
 UI ui = new UI();
 ui.displayMenu();
 
-//TODO: Set up table for Priority, Make markComplete update the task entity, fix logging
+//TODO: Fix logging
 
 }
 }
