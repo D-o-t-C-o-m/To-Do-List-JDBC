@@ -8,7 +8,7 @@ System.out.println("\nYet another To-Do List");
 UI ui = new UI();
 ui.displayMenu();
 
-//TODO: Fix logging
+//TODO: Add 'Display task by priority', Figure out how to manipulate tasks by ID
 
 }
 }
