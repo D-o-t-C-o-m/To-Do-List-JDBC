@@ -17,7 +17,7 @@ public TaskRepository() {
 
 }
 
-private static DataSource getDataSource() {
+static DataSource getDataSource() {
 	var dataSource = new HikariDataSource();
 	dataSource.setJdbcUrl("jdbc:h2:./todo;AUTO_SERVER=true");
 	dataSource.setUsername("sa");
@@ -51,11 +51,12 @@ public static void updateName(String newTask, String oldTask) {
 	}
 }
 
-public static void markCompleted(String task) {
+
+public static void markCompletedId(int task) {
 	try (Connection connection = getDataSource().getConnection()) {
-		var updateCommand = "update TASK set completed = true where name = ?";
+		var updateCommand = "update TASK set completed = true where id = ?";
 		var ps = connection.prepareStatement(updateCommand);
-		ps.setString(1, task);
+		ps.setInt(1, task);
 
 		ps.execute();
 
@@ -64,11 +65,12 @@ public static void markCompleted(String task) {
 	}
 }
 
-public static void delete(String task) {
+
+public static void deleteId(int task) {
 	try (Connection connection = getDataSource().getConnection()) {
-		var deleteQuery = "delete from Task where name = ?";
+		var deleteQuery = "delete from Task where Id = ?";
 		var ps = connection.prepareStatement(deleteQuery);
-		ps.setString(1, task);
+		ps.setInt(1, task);
 		ps.execute();
 	} catch (Exception e) {
 		log.error("e: ", e);
