@@ -1,5 +1,8 @@
 package org.example;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -7,6 +10,7 @@ import java.util.Scanner;
 public class UI {
 private final ArrayList<Task> tasksList;
 private final Scanner scanner = new Scanner(System.in);
+private static final Logger log = LoggerFactory.getLogger(UI.class);
 
 public UI() {
 	tasksList = new ArrayList<>();
@@ -23,6 +27,7 @@ private void printMenu(){
 
 	System.out.println("9. Exit");
 }
+
 public void displayMenu() {
 	try {
 		int choice = 0;
@@ -61,12 +66,14 @@ public void displayMenu() {
 			}
 		}
 	} catch (Exception e) {
-		System.out.println(e);
+		log.error("e: ", e);
 		System.out.println("Entry must be a number");
 	}
 }
+
 public void loadList(){
 	tasksList.addAll(Objects.requireNonNull(TaskRepository.findQuery("select * from TASK")));
+
 }
 
 public void displayTasks() {
