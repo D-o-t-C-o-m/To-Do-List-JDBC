@@ -50,6 +50,18 @@ public static void updateName(String newTask, String oldTask) {
 		log.error("e: ", e);
 	}
 }
+public static void updatePriority(String newPrio, String task) {
+	try (Connection connection = getDataSource().getConnection()) {
+		var updateCommand = "update TASK set PRIORITY = ? where name = ?";
+		var ps = connection.prepareStatement(updateCommand);
+		ps.setString(1, newPrio);
+		ps.setString(2, task);
+		ps.execute();
+
+	} catch (Exception e) {
+		log.error("e: ", e);
+	}
+}
 
 
 public static void markCompletedId(int task) {

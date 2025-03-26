@@ -16,6 +16,6 @@ public static void main(String[] args) {
 	} catch (Exception e) {
 		System.out.println("Database connection failed");
 	}
-	//TODO: Add some safety to prevent crashes. Change Priority, Add a print function?
+	//TODO: Add some safety to prevent crashes. Add a print / email function?
 }
 }

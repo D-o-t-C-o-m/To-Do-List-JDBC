@@ -21,18 +21,19 @@ private void printMenu(){
 	System.out.println("3. Mark a task as completed");
 	System.out.println("4. Delete a task");
 	System.out.println("5. Display tasks by priority");
-	System.out.println("6. Display all tasks");
-	System.out.println("7. Display all tasks that are not completed");
-	System.out.println("8. Delete all tasks");
+	System.out.println("6. Change a task's priority");
+	System.out.println("7. Display all tasks");
+	System.out.println("8. Display all tasks that are not completed");
+	System.out.println("9. Delete all tasks");
 
-	System.out.println("9. Exit");
+	System.out.println("10. Exit");
 }
 
 public void displayMenu() {
 	try {
 		int choice = 0;
 
-		while (choice != 9) {
+		while (choice != 10) {
 			printMenu();
 			System.out.print("> ");
 			choice = scanner.nextInt();
@@ -55,12 +56,15 @@ public void displayMenu() {
 					displayPriority();
 					break;
 				case 6:
-					displayTasks();
+					prioritizeTask();
 					break;
 				case 7:
-					displayIncompleteTasks();
+					displayTasks();
 					break;
 				case 8:
+					displayIncompleteTasks();
+					break;
+				case 9:
 					deleteAllTasks();
 					break;
 			}
@@ -77,7 +81,7 @@ public void loadList(){
 }
 
 public void displayTasks() {
-	System.out.println("All Tasks:");
+	System.out.println("\n");
 	System.out.println("ID | Name | Completed | Priority");
 	Objects.requireNonNull(TaskRepository.findQuery("select * from TASK")).forEach(task1 -> System.out.println(task1.getId() + " | " + task1.getName() + " | " + task1.isCompleted() + " | " + task1.getPriority()));
 	System.out.println("\n");
@@ -175,14 +179,35 @@ private void renameTask() {
 	System.out.println(newName);
 	TaskRepository.updateName(newName, oldName);
 	for (Task task : this.tasksList) {
-		System.out.println(task);
 		if (task.getName().equals(oldName)) {
 			task.setName(newName);
 		}
 	}
 	System.out.println("\n");
 }
-
+private void prioritizeTask() {
+	displayTasks();
+	System.out.println("Enter the ID of the task you want to update");
+	int id = scanner.nextInt();
+	scanner.nextLine();
+	String name = "";
+	for (Task task : this.tasksList) {
+		System.out.println(task);
+		if (task.getId() == id) {
+			name = task.getName();
+			System.out.println(name);
+		}
+	}
+	System.out.println("Enter the new Priority of the task");
+	String newPrio = scanner.nextLine().toUpperCase();
+	TaskRepository.updatePriority(newPrio, name);
+	for (Task task : this.tasksList) {
+		if (task.getName().equals(name)) {
+			task.setPriority(newPrio);
+		}
+	}
+	System.out.println("\n");
+}
 private void markTaskCompletedId() {
 	System.out.println("Task to Mark Completed?");
 	int taskName = scanner.nextInt();
